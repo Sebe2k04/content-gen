@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "dist",
+    "outDir": "./dist",
     "baseUrl": "./",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -10,8 +10,9 @@
       "contract": ["../../apps/contract/index.ts"],
       "contract/*": ["../../apps/contract/*"]
     },
-    "types": ["node", "jest"]
+    "types": ["node", "jest"],
+    "composite": true
   },
-  "include": ["src"],
+  "include": ["src/**/*","../../apps/contract/**/*"],
   "exclude": ["node_modules", "dist"]
 }
