@@ -4,8 +4,8 @@ import { initServer } from "@ts-rest/fastify"
 
 const s = initServer()
 
-// export const authModule = async (app: FastifyInstance) => {
-//   app.register(s.plugin(authController),{
-//     responseValidation: true
-//   })
-// }
+export const authModule = async (app: FastifyInstance) => {
+  app.register(s.plugin(authController),{
+    responseValidation: true
+  })
+}

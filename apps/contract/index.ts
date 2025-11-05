@@ -1,3 +1,6 @@
-export { authContract } from "./auth/contract"
-export { userContract } from "./user/contract"
-
+import { initContract } from "@ts-rest/core";
+import { authContract } from "./auth/contract";
+const c = initContract();
+export const contract = c.router({
+  auth: authContract,
+});

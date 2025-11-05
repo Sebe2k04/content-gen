@@ -24,3 +24,6 @@ export const verifyEmailOtpSchema = z.object({
   email: z.string().email(),
   otp: z.string().length(6),
 });
+export const generateOtpSchema = z.object({
+  email: z.string().email(),
+});
