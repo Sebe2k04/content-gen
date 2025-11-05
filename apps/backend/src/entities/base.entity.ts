@@ -1,28 +1,13 @@
 import { PrimaryKey, Property } from '@mikro-orm/core';
+import { v4 as uuidv4 } from 'uuid';
 
 export abstract class BaseEntity {
   @PrimaryKey()
-  id!: number;
+  id: string = uuidv4();
 
-  @Property({
-    defaultRaw: 'now()',
-    columnType: 'timestamptz',
-    type: 'timestamptz',
-  })
+  @Property()
   createdAt: Date = new Date();
 
-  @Property({
-    defaultRaw: 'now()',
-    columnType: 'timestamptz',
-    type: 'timestamptz',
-    onUpdate: () => new Date(),
-  })
+  @Property({ onUpdate: () => new Date() })
   updatedAt: Date = new Date();
-
-  @Property({
-    nullable: true,
-    columnType: 'timestamptz',
-    type: 'timestamptz',
-  })
-  deletedAt?: Date;
 }
