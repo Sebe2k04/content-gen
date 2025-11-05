@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ../../
+      dockerfile: apps/backend/Dockerfile
+    container_name: backend
+    env_file:
+      - ./.env   # 👈 local relative path
+    ports:
+      - "${PORT}:${PORT}"
+    working_dir: /app/apps/backend
+    command: pnpm start:dev
+    volumes:
+      - ../../:/app
