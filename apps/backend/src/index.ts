@@ -5,6 +5,7 @@ import fastifySwagger from "@fastify/swagger";
 import { authModule } from "./auth/auth.module";
 import { env } from "./env.validation";
 import { contract } from "contract";
+import { httpExceptionHandler } from "./common/filters/http-exception.filter";
 
 const document = generateOpenApi(
   contract,
@@ -106,6 +107,7 @@ export const createServer = async (): Promise<FastifyInstance> => {
       memoryUsage: process.memoryUsage(),
     };
   });
+  app.setErrorHandler(httpExceptionHandler);
 
   return app;
 };
