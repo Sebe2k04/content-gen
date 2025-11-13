@@ -7,11 +7,11 @@
     "emitDecoratorMetadata": true,
     "strictPropertyInitialization": false,
     "paths": {
-      "contract": ["../../apps/contract/index.ts"],
+      "contract": ["../../apps/contract"],
       "contract/*": ["../../apps/contract/*"]
     },
     "types": ["node", "jest"],
-    "composite": true
+    "composite": true,
   },
   "include": ["src/**/*","../../apps/contract/**/*"],
   "exclude": ["node_modules", "dist"]
