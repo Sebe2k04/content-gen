@@ -3,9 +3,8 @@ import { generateOpenApi } from "@ts-rest/open-api";
 import { authModule } from "./auth/auth.module.js";
 import { env } from "./env.validation.js";
 import { contract } from "contract";
-import { httpExceptionHandler } from "./common/filters/http-exception.filter.js";
+import { httpExceptionHandler } from "./common/filters/http-exception.filter.ts";
 import { initDatabase, closeDatabase, getEntityManager } from "./db.js";
-import { MikroORM } from "@mikro-orm/core";
 
 const openApiSpec = generateOpenApi(contract, {
   info: {

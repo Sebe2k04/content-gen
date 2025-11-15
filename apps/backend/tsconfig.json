@@ -20,6 +20,8 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+    "emitDeclarationOnly": true,
+    "allowImportingTsExtensions": true,
     "paths": {
       "contract": ["../../apps/contract"],
       "contract/*": ["../../apps/contract/*"]

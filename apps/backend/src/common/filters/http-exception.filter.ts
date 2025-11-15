@@ -11,7 +11,6 @@ export function httpExceptionHandler(error: Error, request: FastifyRequest, repl
     });
   }
 
-  // Handle MikroORM's NotFoundError
   if (error.name === 'NotFoundError') {
     return reply.status(404).send({
       statusCode: 404,
@@ -20,7 +19,6 @@ export function httpExceptionHandler(error: Error, request: FastifyRequest, repl
     });
   }
 
-  // Handle validation errors
   if (error.name === 'ValidationError') {
     return reply.status(400).send({
       statusCode: 400,
