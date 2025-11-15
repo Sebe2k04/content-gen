@@ -2,7 +2,7 @@ import 'dotenv/config';
 
 interface EnvVars {
   // Server
-  NODE_ENV: 'development' | 'production' | 'test';
+  NODE_ENV: 'development' | 'production' | 'stage';
   PORT: number;
   LOG_LEVEL?: string;
   
@@ -38,7 +38,7 @@ function parseBoolean(value: string | undefined, defaultValue: boolean): boolean
 
 export const env: EnvVars = {
   // Server
-  NODE_ENV: (process.env.NODE_ENV as 'development' | 'production' | 'test') || 'development',
+  NODE_ENV: (process.env.NODE_ENV as 'development' | 'production' | 'stage') || 'development',
   PORT: Number(process.env.PORT) || 4000,
   
   // Database
@@ -51,11 +51,5 @@ export const env: EnvVars = {
 
 // Log environment for debugging
 if (env.NODE_ENV === 'development') {
-  console.log('Environment variables loaded:', {
-    NODE_ENV: env.NODE_ENV,
-    PORT: env.PORT,
-    DATABASE_URL: env.DATABASE_URL ? '***' : 'Not set',
-    JWT_SECRET: env.JWT_SECRET ? '***' : 'Not set',
-    JWT_EXPIRES_IN: env.JWT_EXPIRES_IN
-  });
+  console.log('Environment variables loaded');
 }

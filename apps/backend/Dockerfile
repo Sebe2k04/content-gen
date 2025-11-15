@@ -9,7 +9,6 @@ COPY apps/backend apps/contract
 RUN pnpm install
 
 WORKDIR /app/apps/backend
-# RUN pnpm run build
 
 EXPOSE ${PORT}
 

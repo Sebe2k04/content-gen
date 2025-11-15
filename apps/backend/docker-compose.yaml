@@ -7,7 +7,7 @@ services:
       dockerfile: apps/backend/Dockerfile
     container_name: backend
     env_file:
-      - ./.env   # 👈 local relative path
+      - ./.env
     ports:
       - "${PORT}:${PORT}"
     working_dir: /app/apps/backend
