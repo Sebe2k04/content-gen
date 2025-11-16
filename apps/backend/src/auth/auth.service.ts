@@ -1,16 +1,15 @@
-import { EntityManager } from "@mikro-orm/postgresql";
 import jwt from "jsonwebtoken";
 import { em } from "src/db";
+import { EmailVerificationOtp } from "src/entities/emailVerificatonOtp.entity";
 import { User } from "src/entities/user.entity";
+import { BadRequestException } from "src/exceptions/http.exception";
 
 type EmType = typeof em;
 
 export class AuthService {
   private static instance: AuthService;
   private em: Awaited<ReturnType<EmType['get']>>;
-  
   private constructor(private dbEm: EmType) {
-    // We'll initialize this in the init method
     this.em = null as any;
   }
 
@@ -44,10 +43,23 @@ export class AuthService {
   }
 
   async generateEmailOtp(email: string) {
-    console.log(`OTP generated for ${email}`);
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const newOtp = new EmailVerificationOtp({
+      email,
+      otp,
+      isUsed: false,
+      expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+    });
+    await this.em.persistAndFlush(newOtp);
   }
 
   async verifyEmailOtp(email: string, otp: string) {
+    const otpRecord = await this.em.findOne(EmailVerificationOtp, { email, otp });
+    if (!otpRecord || otpRecord.isUsed || otpRecord.expiresAt < new Date()) {
+      throw new BadRequestException('Invalid or expired OTP');
+    }
+    otpRecord.isUsed = true;
+    await this.em.persistAndFlush(otpRecord);
     return this.issueTokens({ id: "user-1", email });
   }
 
@@ -59,7 +71,6 @@ export class AuthService {
   }
 }
 
-// Export a function to get the auth service instance
 export async function getAuthService(): Promise<AuthService> {
   return AuthService.getInstance();
 }

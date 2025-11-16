@@ -2,8 +2,6 @@ import { initServer } from "@ts-rest/fastify"
 import { contract } from "contract"
 import { getAuthService } from "./auth.service"
 
-// No need to initialize authService at module level
-
 const s = initServer()
 
 export const authController = s.router(contract.auth, {

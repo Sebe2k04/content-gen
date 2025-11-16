@@ -42,9 +42,6 @@ export function getEntityManager() {
   return orm.em.fork();
 }
 
-/**
- * Close the database connection
- */
 export async function closeDatabase() {
   if (orm) {
     await orm.close();
@@ -52,15 +49,12 @@ export async function closeDatabase() {
   }
 }
 
-// Store the initialization promise to prevent multiple initializations
 let initPromise: Promise<OrmType> | null = null;
 
-// Function to ensure database is initialized
 export async function ensureDbInitialized(): Promise<OrmType> {
   if (orm) return orm;
   if (!initPromise) {
     initPromise = initDatabase().catch(err => {
-      // Reset initPromise on error to allow retries
       initPromise = null;
       throw err;
     });
