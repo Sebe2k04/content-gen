@@ -1,4 +1,3 @@
-import { EntityManager } from "@mikro-orm/postgresql";
 import jwt from "jsonwebtoken";
 import { em } from "src/db";
 import { User } from "src/entities/user.entity";
@@ -10,7 +9,6 @@ export class AuthService {
   private em: Awaited<ReturnType<EmType['get']>>;
   
   private constructor(private dbEm: EmType) {
-    // We'll initialize this in the init method
     this.em = null as any;
   }
 
