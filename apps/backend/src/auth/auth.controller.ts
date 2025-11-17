@@ -30,13 +30,13 @@ export const authController = (app: FastifyInstance) =>
       const output = await authService.verifyEmailOtp(body.email, body.otp);
       return { status: 200, body: output };
     },
-    googleLogin: async ({ request, reply }) => {
-      const authUrl = await app.googleOAuth.generateAuthorizationUri(
-        request,
-        reply
-      );
-      return reply.redirect(302, authUrl);
-    },
+    // googleLogin: async ({ request, reply }) => {
+    //   const authUrl = await app.googleOAuth.generateAuthorizationUri(
+    //     request,
+    //     reply
+    //   );
+    //   return reply.redirect(302, authUrl);
+    // },
 
     googleCallback: async ({ request, reply }) => {
       const authService = await getAuthService();
@@ -48,13 +48,20 @@ export const authController = (app: FastifyInstance) =>
       return reply.redirect(302, redirectUrl);
     },
 
-    githubLogin: async ({ request, reply }) => {
-      const authUrl = await app.githubOAuth.generateAuthorizationUri(
-        request,
-        reply
-      );
-      return reply.redirect(302, authUrl);
-    },
+    // githubLogin: async ({ request, reply }) => {
+    //   try {
+    //     const authUrl = app.githubOAuth.generateAuthorizationUri({
+    //       redirect_uri: `${process.env.BACKEND_URL}/api/auth/github/callback`,
+    //       state: request.session.get("state") || "random-state",
+    //     });
+    //     return reply.redirect(authUrl);
+    //   } catch (error) {
+    //     console.error("GitHub OAuth error:", error);
+    //     return reply
+    //       .status(500)
+    //       .send({ error: "Failed to initialize GitHub OAuth" });
+    //   }
+    // },
 
     githubCallback: async ({ request, reply }) => {
       const authService = await getAuthService();

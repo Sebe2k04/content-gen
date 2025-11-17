@@ -44,27 +44,27 @@ export const authContract = c.router(
         200: successAuthResponseSchema,
       },
     },
-    googleLogin: {
-      method: "GET",
-      path: "/auth/google",
-      responses: { 302: z.void() },
-    },
+    // googleLogin: {
+    //   method: "GET",
+    //   path: "/google",
+    //   responses: { 302: z.void() },
+    // },
 
     googleCallback: {
       method: "GET",
-      path: "/auth/google/callback",
+      path: "/google/callback",
       responses: { 302: z.void() },
     },
 
-    githubLogin: {
-      method: "GET",
-      path: "/auth/github",
-      responses: { 302: z.void() },
-    },
+    // githubLogin: {
+    //   method: "GET",
+    //   path: "/github",
+    //   responses: { 302: z.void() },
+    // },
 
     githubCallback: {
       method: "GET",
-      path: "/auth/github/callback",
+      path: "/github/callback",
       responses: { 302: z.void() },
     },
   },
