@@ -1,4 +1,5 @@
 import Fastify, { FastifyInstance } from "fastify";
+import cors from "@fastify/cors";
 import { generateOpenApi } from "@ts-rest/open-api";
 import { authModule } from "./auth/auth.module.js";
 import { env } from "./env.validation.js";
@@ -41,6 +42,17 @@ export const createServer = async (): Promise<FastifyInstance> => {
     },
     disableRequestLogging: process.env.NODE_ENV === "test",
   });
+
+  // Register CORS
+  await app.register(cors, {
+    origin: process.env.NODE_ENV === 'production' 
+      ? process.env.FRONTEND_URL || 'http://localhost:3001' 
+      : true, // Allow all origins in development
+    methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+  });
+
   app.addHook("onRequest", (request, _reply, done) => {
     request.id = crypto.randomUUID();
     request.log = request.log.child({ requestId: request.id });

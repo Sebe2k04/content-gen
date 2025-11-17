@@ -12,8 +12,9 @@
     "migration:fresh": "mikro-orm migration:fresh"
   },
   "dependencies": {
-    "@fastify/cookie": "^11.0.2",
-    "@fastify/oauth2": "^8.1.2",
+    "@fastify/cookie": "^9.1.0",
+    "@fastify/cors": "^8.5.0",
+    "@fastify/oauth2": "^7.0.0",
     "@mikro-orm/core": "^6.5.9",
     "@mikro-orm/entity-generator": "^6.5.9",
     "@mikro-orm/migrations": "^6.5.9",
@@ -35,8 +36,8 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@fastify/swagger": "^7.6.0",
-    "@fastify/swagger-ui": "^4.2.0",
+    "@fastify/swagger": "^7.0.0",
+    "@fastify/swagger-ui": "^1.0.0",
     "@mikro-orm/cli": "^6.5.9",
     "@ts-rest/open-api": "^3.52.1",
     "@types/jest": "^30.0.0",

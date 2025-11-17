@@ -11,8 +11,13 @@ export interface ErrorStatusInterface {
   message: string;
 }
 
+interface ApiResponse<T> {
+  status: number;
+  body: T;
+}
+
 export interface MakeApiCallFunctionProps<T> {
-  fetcherFn: () => Promise<AxiosResponse<T>>;
+  fetcherFn: () => Promise<ApiResponse<T>>;
   onSuccessFn?: (response: T) => void;
   onFailureFn?: (error: AxiosError) => void;
   successMsg?: string;
@@ -29,8 +34,8 @@ export function useApiQuery<T = any>() {
   const [isApiLoading, setIsApiLoading] = useState(false);
   const { showToast } = useCustomToast();
 
-const mutation = useMutation<T, AxiosError, MakeApiCallFunctionProps<T>>({
-  mutationFn: async (variables: MakeApiCallFunctionProps<T>): Promise<T> => {  // Explicit return type
+const mutation = useMutation<ApiResponse<T>, AxiosError, MakeApiCallFunctionProps<T>>({
+  mutationFn: async (variables: MakeApiCallFunctionProps<T>): Promise<ApiResponse<T>> => {
     const {
       fetcherFn,
       onSuccessFn,
@@ -56,15 +61,14 @@ const mutation = useMutation<T, AxiosError, MakeApiCallFunctionProps<T>>({
             message: successMsg,
           });
         }
-        onSuccessFn?.(response.data);
-        return response.data;
+        onSuccessFn?.(response.body);
+        return response;
       }
 
       // ... rest of your error handling ...
 
       // If we get here, it's an error case
       const error = new Error(failureMsg || "Something went wrong") as AxiosError;
-      error.response = response;
       throw error;
 
     } catch (error) {
