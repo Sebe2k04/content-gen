@@ -12,6 +12,8 @@
     "migration:fresh": "mikro-orm migration:fresh"
   },
   "dependencies": {
+    "@fastify/cookie": "^11.0.2",
+    "@fastify/oauth2": "^8.1.2",
     "@mikro-orm/core": "^6.5.9",
     "@mikro-orm/entity-generator": "^6.5.9",
     "@mikro-orm/migrations": "^6.5.9",

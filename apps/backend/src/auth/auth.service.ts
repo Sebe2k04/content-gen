@@ -8,7 +8,7 @@ type EmType = typeof em;
 
 export class AuthService {
   private static instance: AuthService;
-  private em: Awaited<ReturnType<EmType['get']>>;
+  private em: Awaited<ReturnType<EmType["get"]>>;
   private constructor(private dbEm: EmType) {
     this.em = null as any;
   }
@@ -25,7 +25,6 @@ export class AuthService {
   private async init(): Promise<void> {
     this.em = await this.dbEm.get();
   }
-
 
   async signup(data: { email: string; password: string }) {
     const user = new User({
@@ -54,9 +53,12 @@ export class AuthService {
   }
 
   async verifyEmailOtp(email: string, otp: string) {
-    const otpRecord = await this.em.findOne(EmailVerificationOtp, { email, otp });
+    const otpRecord = await this.em.findOne(EmailVerificationOtp, {
+      email,
+      otp,
+    });
     if (!otpRecord || otpRecord.isUsed || otpRecord.expiresAt < new Date()) {
-      throw new BadRequestException('Invalid or expired OTP');
+      throw new BadRequestException("Invalid or expired OTP");
     }
     otpRecord.isUsed = true;
     await this.em.persistAndFlush(otpRecord);
@@ -68,6 +70,59 @@ export class AuthService {
       expiresIn: "15m",
     });
     return { accessToken, user: payload };
+  }
+
+  async handleGoogleCallback(accessToken: string) {
+    const userRes = await fetch(
+      "https://www.googleapis.com/oauth2/v2/userinfo",
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
+
+    const profile = await userRes.json();
+
+    let user = await this.em.findOne(User, { email: profile.email });
+
+    if (!user) {
+      user = new User({
+        email: profile.email,
+        password: "",
+        name: profile.name || "Google User",
+        avatarUrl: profile.picture ?? null,
+      });
+      await this.em.persistAndFlush(user);
+    }
+
+    const tokens = this.issueTokens({ id: user.id, email: user.email });
+
+    return `${process.env.FRONTEND_URL}/auth/callback?token=${tokens.accessToken}`;
+  }
+
+  async handleGithubCallback(accessToken: string) {
+    const userRes = await fetch("https://api.github.com/user", {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+
+    const emailRes = await fetch("https://api.github.com/user/emails", {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+
+    const profile = await userRes.json();
+    const emails = await emailRes.json();
+    const primaryEmail = emails.find((e: any) => e.primary)?.email;
+    let user = await this.em.findOne(User, { email: primaryEmail });
+    if (!user) {
+      user = new User({
+        email: primaryEmail,
+        password: "",
+        name: profile.name || profile.login,
+        avatarUrl: profile.avatar_url ?? null,
+      });
+      await this.em.persistAndFlush(user);
+    }
+    const tokens = this.issueTokens({ id: user.id, email: user.email });
+    return `${process.env.FRONTEND_URL}/auth/callback?token=${tokens.accessToken}`;
   }
 }
 
