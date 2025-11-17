@@ -1,5 +1,6 @@
 import { FastifyInstance, FastifyRequest, FastifyReply, HookHandlerDoneFunction } from "fastify";
-import { isAuthenticatedRequest } from "../types/auth";
+import { isAuthenticatedRequest } from "../types/auth";  // Update the import path
+
 
 export class UnauthorizedError extends Error {
   statusCode = 401;

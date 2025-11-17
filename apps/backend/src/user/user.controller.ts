@@ -2,9 +2,8 @@ import { initServer } from "@ts-rest/fastify";
 import { contract } from "contract";
 import { getAuthService } from "./user.service";
 import { FastifyInstance } from "fastify";
-import { JwtGuard } from "src/common/guards/jwt.guard";
-import { AuthenticatedRequest } from "src/common/types/auth";
-
+import { JwtGuard } from "../common/guards/jwt.guard";
+import { AuthenticatedRequest } from "../types/auth";  // Update the import path
 const s = initServer();
 
 export const userController = (app: FastifyInstance) => {

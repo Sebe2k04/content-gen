@@ -1,15 +1,11 @@
 import "@fastify/oauth2";
 import { OAuth2Namespace } from "@fastify/oauth2";
 
-export type User = {
-  id: string;
-  email: string;
-  [key: string]: any;
-};
+import { JwtUser } from '../common/types/auth';
 
 declare module "fastify" {
   interface FastifyRequest {
-    user?: User; // Optional for unauthenticated routes
+    user?: JwtUser; // Optional for unauthenticated routes
     [key: string]: any;
   }
   
