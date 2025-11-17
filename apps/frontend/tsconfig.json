@@ -14,7 +14,9 @@
     "jsx": "react-jsx",
     "incremental": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "contract": ["../contract"],
+      "contract/*": ["../contract/*"]
     }
   },
   "include": [
