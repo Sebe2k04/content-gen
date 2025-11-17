@@ -6,6 +6,7 @@ import { env } from "./env.validation.js";
 import { contract } from "contract";
 import { httpExceptionHandler } from "./common/filters/http-exception.filter.ts";
 import { initDatabase, closeDatabase, getEntityManager } from "./db.js";
+import jwtPlugin from "./plugins/jwt.plugin.ts";
 
 const openApiSpec = generateOpenApi(contract, {
   info: {
@@ -45,12 +46,13 @@ export const createServer = async (): Promise<FastifyInstance> => {
 
   // Register CORS
   await app.register(cors, {
-    origin: process.env.NODE_ENV === 'production' 
-      ? process.env.FRONTEND_URL || 'http://localhost:3001' 
-      : true, // Allow all origins in development
-    methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
+    origin:
+      process.env.NODE_ENV === "production"
+        ? process.env.FRONTEND_URL || "http://localhost:3001"
+        : true, // Allow all origins in development
+    methods: ["GET", "PUT", "POST", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   });
 
   app.addHook("onRequest", (request, _reply, done) => {
@@ -71,21 +73,26 @@ export const createServer = async (): Promise<FastifyInstance> => {
   // Initialize database
   try {
     await initDatabase();
-    app.log.info('Database connected successfully');
+    app.log.info("Database connected successfully");
   } catch (error) {
-    app.log.error(error, 'Failed to connect to database');
+    app.log.error(error, "Failed to connect to database");
     throw error;
   }
 
   // Add database instance to Fastify instance for easy access in routes
-  app.decorate('db', {
+  app.decorate("db", {
     em: getEntityManager(),
     // Add Kysely instance if needed
     // kysely: getKysely()
   });
 
-  // Register auth module
+  // plugins
+  await app.register(jwtPlugin);
+
+  // Register modules
   app.register(authModule);
+
+  // scalar api reference
   app.get("/openapi.json", async () => openApiSpec);
   await app.register(import("@scalar/fastify-api-reference"), {
     routePrefix: "/docs",
@@ -108,7 +115,7 @@ export const createServer = async (): Promise<FastifyInstance> => {
   app.setErrorHandler(httpExceptionHandler);
 
   // Add hook to close database connection when server shuts down
-  app.addHook('onClose', async () => {
+  app.addHook("onClose", async () => {
     await closeDatabase();
   });
 

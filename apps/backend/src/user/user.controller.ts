@@ -1,0 +1,40 @@
+import { initServer } from "@ts-rest/fastify";
+import { contract } from "contract";
+import { getAuthService } from "./user.service";
+import { FastifyInstance } from "fastify";
+import { JwtGuard } from "src/common/guards/jwt.guard";
+import { AuthenticatedRequest } from "src/common/types/auth";
+
+const s = initServer();
+
+export const userController = (app: FastifyInstance) => {
+  const jwtGuard = JwtGuard(app);
+
+  return s.router(contract.user, {
+    getProfile: {
+      handler: async ({ request }) => {
+        const authService = await getAuthService();
+        // TypeScript now knows request is AuthenticatedRequest in this handler
+        const output = await authService.getProfile((request as AuthenticatedRequest).user);
+        return { status: 200, body: output };
+      },
+      hooks: {
+        preHandler: jwtGuard.preHandler, // This route is now protected
+      },
+    },
+    updateProfile: {
+      handler: async ({ body, request }) => {
+        const authService = await getAuthService();
+        // TypeScript now knows request is AuthenticatedRequest in this handler
+        await authService.updateProfile(body, (request as AuthenticatedRequest).user);
+        return {
+          status: 200,
+          body: { message: "Profile updated successfully" },
+        };
+      },
+      hooks: {
+        preHandler: jwtGuard.preHandler, // Add this if you want to protect the route
+      },
+    },
+  });
+};
