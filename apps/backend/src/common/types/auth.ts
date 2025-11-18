@@ -3,7 +3,6 @@ import { FastifyRequest } from 'fastify';
 export interface JwtUser {
   id: string;
   email: string;
-  // Add other user properties as needed
 }
 
 export function isAuthenticatedRequest(
