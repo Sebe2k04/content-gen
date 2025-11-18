@@ -1,9 +1,9 @@
 import { initServer } from "@ts-rest/fastify";
-import { getPortfolioService } from "./portfolio.service";
 import { FastifyInstance } from "fastify";
 import { JwtGuard } from "../common/guards/jwt.guard";
 import { contract } from "contract";
 import { AuthenticatedRequest } from "src/types/auth";
+import { getPortfolioService } from "./portfolio.service";
 
 const s = initServer();
 
@@ -12,15 +12,12 @@ export const portfolioController = (app: FastifyInstance) => {
 
   return s.router(contract.portfolio, {
     createResume: {
-      handler: async ({ body,request,reply }) => {
-        // read multipart using fastify-multipart plugin (must be registered on server)
-        const mp = await request.file(); // fastify-multipart API
-        if (!mp) {
-          return reply.status(400).send({ message: "No file uploaded" });
-        }
-        const buffer = await mp.toBuffer();
-        const service = await getPortfolioService();
-        const out = await service.createResume((request as AuthenticatedRequest).user, body);
+      handler: async ({ body, request, reply }) => {
+        const portfolioService = await getPortfolioService();
+        const out = await portfolioService.createResume(
+          (request as AuthenticatedRequest).user,
+          body
+        );
         return { status: 200, body: out };
       },
       hooks: {
@@ -30,8 +27,11 @@ export const portfolioController = (app: FastifyInstance) => {
 
     createPortfolio: {
       handler: async ({ body, request }) => {
-        const service = await getPortfolioService();
-        await service.createPortfolio((request as AuthenticatedRequest).user, body);
+        const portfolioService = await getPortfolioService();
+        await portfolioService.createPortfolio(
+          (request as AuthenticatedRequest).user,
+          body
+        );
         return { status: 200, body: { message: "Saved" } };
       },
       hooks: {
@@ -41,8 +41,8 @@ export const portfolioController = (app: FastifyInstance) => {
 
     addProject: {
       handler: async ({ body, request }) => {
-        const service = await getPortfolioService();
-        await service.addProject((request as AuthenticatedRequest).user, body);
+        const portfolioService = await getPortfolioService();
+        await portfolioService.addProject((request as AuthenticatedRequest).user, body);
         return {
           status: 200,
           body: {
@@ -55,8 +55,12 @@ export const portfolioController = (app: FastifyInstance) => {
 
     updateProject: {
       handler: async ({ params, body, request }) => {
-        const service = await getPortfolioService();
-        await service.updateProject((request as AuthenticatedRequest).user, (params as any).id, body);
+        const portfolioService = await getPortfolioService();
+        await portfolioService.updateProject(
+          (request as AuthenticatedRequest).user,
+          (params as any).id,
+          body
+        );
         return {
           status: 200,
           body: {
@@ -69,8 +73,11 @@ export const portfolioController = (app: FastifyInstance) => {
 
     deleteProject: {
       handler: async ({ params, request }) => {
-        const service = await getPortfolioService();
-        const out = await service.deleteProject((request as AuthenticatedRequest).user, (params as any).id);
+        const portfolioService = await getPortfolioService();
+        const out = await portfolioService.deleteProject(
+          (request as AuthenticatedRequest).user,
+          (params as any).id
+        );
         return { status: 200, body: out };
       },
       hooks: { preHandler: jwtGuard.preHandler },
@@ -78,8 +85,8 @@ export const portfolioController = (app: FastifyInstance) => {
 
     addSkill: {
       handler: async ({ body, request }) => {
-        const service = await getPortfolioService();
-        await service.addSkill((request as AuthenticatedRequest).user, body);
+        const portfolioService = await getPortfolioService();
+        await portfolioService.addSkill((request as AuthenticatedRequest).user, body);
         return {
           status: 200,
           body: {
@@ -92,8 +99,11 @@ export const portfolioController = (app: FastifyInstance) => {
 
     upsertIntegration: {
       handler: async ({ body, request }) => {
-        const service = await getPortfolioService();
-        await service.upsertIntegration((request as AuthenticatedRequest).user, body);
+        const portfolioService = await getPortfolioService();
+        await portfolioService.upsertIntegration(
+          (request as AuthenticatedRequest).user,
+          body
+        );
         return {
           status: 200,
           body: {
@@ -106,8 +116,8 @@ export const portfolioController = (app: FastifyInstance) => {
 
     setTheme: {
       handler: async ({ body, request }) => {
-        const service = await getPortfolioService();
-        const theme = await service.setTheme((request as AuthenticatedRequest).user, body);
+        const portfolioService = await getPortfolioService();
+        await portfolioService.setTheme((request as AuthenticatedRequest).user, body);
         return {
           status: 200,
           body: {
@@ -120,8 +130,8 @@ export const portfolioController = (app: FastifyInstance) => {
 
     getPublicPortfolio: {
       handler: async ({ query }) => {
-        const service = await getPortfolioService();
-        const portfolio = await service.getPublicPortfolio(query.userId);
+        const portfolioService = await getPortfolioService();
+        const portfolio = await portfolioService.getPublicPortfolio(query.userId);
 
         // Transform the data to match the expected contract
         const transformedPortfolio = {

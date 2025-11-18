@@ -36,9 +36,9 @@ export class PortfolioService {
   // Upload PDF, save to storage and call parser
   async createResume(
     user: { id: string; email: string },
-    file: { filename: string; mimetype: string; buffer: Buffer }
+    data: ServerInferRequest<typeof contract.portfolio.createResume>["body"]
   ) {
-    if (file.mimetype !== "application/pdf") {
+    if (data.mimetype !== "application/pdf") {
       throw new BadRequestException("Only PDF resumes are allowed");
     }
 
@@ -49,24 +49,14 @@ export class PortfolioService {
       user: { id: user.id },
     });
 
-    // store file (example: local storage; in prod use S3)
-    const storagePath = path.join(
-      process.cwd(),
-      "uploads",
-      "resumes",
-      `${Date.now()}-${file.filename}`
-    );
-    await fs.mkdir(path.dirname(storagePath), { recursive: true });
-    await fs.writeFile(storagePath, file.buffer);
-
     // parse the resume
-    const extracted = await this.parsePdfResume(storagePath);
+    const extracted = await this.parsePdfResume(data);
 
     const resume = new Resume({
       portfolio,
-      filename: file.filename,
-      mimeType: file.mimetype,
-      storagePath,
+      filename: data.filename,
+      mimeType: data.mimetype,
+      url:data.url,
       extractedData: extracted,
     } as any);
 

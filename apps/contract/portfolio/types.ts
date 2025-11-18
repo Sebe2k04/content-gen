@@ -69,3 +69,7 @@ export const createPortfolioSchema = z.object({
   bio: z.string().optional(),
   avatarUrl: z.string().nullable(),
 });
+
+export const createResumeSchema = z.object({
+  
+})
