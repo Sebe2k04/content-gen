@@ -133,7 +133,6 @@ export const portfolioController = (app: FastifyInstance) => {
         const portfolioService = await getPortfolioService();
         const portfolio = await portfolioService.getPublicPortfolio(query.userId);
 
-        // Transform the data to match the expected contract
         const transformedPortfolio = {
           id: portfolio.id,
           userId: portfolio.userId,
