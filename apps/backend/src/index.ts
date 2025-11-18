@@ -8,12 +8,15 @@ import { httpExceptionHandler } from "./common/filters/http-exception.filter.ts"
 import { initDatabase, closeDatabase, getEntityManager } from "./db.js";
 import jwtPlugin from "./plugins/jwt.plugin.ts";
 import { userModule } from "./user/user.module.ts";
+import multipart from "@fastify/multipart";
+import { uploadModule } from "./upload/upload.module.ts";
+import { portfolioModule } from "./portfolio/portfolio.module.ts";
 
 const openApiSpec = generateOpenApi(contract, {
   info: {
     title: "Content Generation API",
     version: "1.0.0",
-    description: "API for Content Generation with JWT Authentication"
+    description: "API for Content Generation with JWT Authentication",
   },
   components: {
     securitySchemes: {
@@ -21,15 +24,15 @@ const openApiSpec = generateOpenApi(contract, {
         type: "http",
         scheme: "bearer",
         bearerFormat: "JWT",
-        description: "Enter JWT token in the format 'Bearer <token>'"
-      }
-    }
+        description: "Enter JWT token in the format 'Bearer <token>'",
+      },
+    },
   },
   security: [
     {
-      bearerAuth: []
-    }
-  ]
+      bearerAuth: [],
+    },
+  ],
 });
 export const createServer = async (): Promise<FastifyInstance> => {
   const app = Fastify({
@@ -96,6 +99,10 @@ export const createServer = async (): Promise<FastifyInstance> => {
     throw error;
   }
 
+  await app.register(multipart, {
+    limits: { fileSize: 10 * 1024 * 1024 },
+  });
+
   // Add database instance to Fastify instance for easy access in routes
   app.decorate("db", {
     em: getEntityManager(),
@@ -109,6 +116,8 @@ export const createServer = async (): Promise<FastifyInstance> => {
   // Register modules
   app.register(authModule);
   app.register(userModule);
+  app.register(uploadModule);
+  app.register(portfolioModule);
 
   // scalar api reference
   app.get("/openapi.json", async () => openApiSpec);
