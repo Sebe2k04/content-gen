@@ -1,6 +1,6 @@
 // src/contract/portfolio/types.ts
 import { z } from "zod";
-import { IntegrationProvider, SkillLevel } from "../enum";
+import { IntegrationProvider, MediaType, SkillLevel } from "../enum";
 
 export const integrationSchema = z.object({
   id: z.string().optional(), // server id
@@ -71,5 +71,7 @@ export const createPortfolioSchema = z.object({
 });
 
 export const createResumeSchema = z.object({
-  
+  url: z.string().url(),
+  filename: z.string(),
+  mediaType: z.nativeEnum(MediaType),
 })

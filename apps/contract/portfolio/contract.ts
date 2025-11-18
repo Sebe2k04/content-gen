@@ -3,7 +3,8 @@ import { initContract } from "@ts-rest/core";
 import {
   integrationSchema, projectSchema, skillSchema, themeSchema,
   resumeUploadResponse, portfolioPublicResponse,
-  createPortfolioSchema
+  createPortfolioSchema,
+  createResumeSchema
 } from "./types";
 import { successResponseSchema } from "../common"; // your common
 import z from "zod";
@@ -15,7 +16,7 @@ export const portfolioContract = c.router({
   createResume: {
     method: "POST",
     path: "/resume/upload",
-    body: z.any(),
+    body: createResumeSchema,
     responses: { 200: resumeUploadResponse },
   },
   createPortfolio: {

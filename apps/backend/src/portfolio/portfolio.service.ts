@@ -12,6 +12,7 @@ import { BadRequestException } from "src/exceptions/http.exception";
 import { User } from "src/entities/user.entity";
 import { ServerInferRequest } from "@ts-rest/core";
 import { contract } from "contract";
+import { MediaType } from "contract/enum";
 type EmType = typeof em;
 
 export class PortfolioService {
@@ -38,24 +39,20 @@ export class PortfolioService {
     user: { id: string; email: string },
     data: ServerInferRequest<typeof contract.portfolio.createResume>["body"]
   ) {
-    if (data.mimetype !== "application/pdf") {
+    if (data.mediaType !== MediaType.PDF) {
       throw new BadRequestException("Only PDF resumes are allowed");
     }
-
-    const userEntity = await this.em.findOneOrFail(User, user.id);
-
-    // Get or create portfolio
     let portfolio = await this.em.findOneOrFail(Portfolio, {
       user: { id: user.id },
     });
 
-    // parse the resume
-    const extracted = await this.parsePdfResume(data);
+    // todo:parse the resume
+    const extracted = await this.parsePdfResume(data.url);
 
     const resume = new Resume({
       portfolio,
       filename: data.filename,
-      mimeType: data.mimetype,
+      mimeType: data.mediaType,
       url:data.url,
       extractedData: extracted,
     } as any);
@@ -65,7 +62,7 @@ export class PortfolioService {
     return { resumeId: resume.id, extracted };
   }
 
-  private async parsePdfResume(storagePath: string) {
+  private async parsePdfResume(url: string) {
     return {
       name: null,
       email: null,
