@@ -1,6 +1,7 @@
 import { Entity, Property, ManyToOne } from "@mikro-orm/core";
 import { BaseEntity } from "./base.entity";
 import { Portfolio } from "./portfolio.entity";
+import { MediaType } from "contract/enum";
 
 @Entity()
 export class Resume extends BaseEntity {
@@ -11,7 +12,7 @@ export class Resume extends BaseEntity {
   filename: string;
 
   @Property({})
-  mimeType: string;
+  mediaType: MediaType;
 
   @Property({})
   url: string;
@@ -25,20 +26,20 @@ export class Resume extends BaseEntity {
   constructor({
     portfolio,
     filename,
-    mimeType,
+    mediaType,
     url,
     extractedData,
   }: {
     portfolio: Portfolio;
     filename: string;
-    mimeType: string;
+    mediaType: MediaType;
     url: string;
     extractedData?: Record<string, any> | null;
   }) {
     super();
     this.portfolio = portfolio;
     this.filename = filename;
-    this.mimeType = mimeType;
+    this.mediaType = mediaType;
     this.url = url;
     this.extractedData = extractedData || null;
   }

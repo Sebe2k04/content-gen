@@ -2,7 +2,8 @@
 import { initContract } from "@ts-rest/core";
 import {
   integrationSchema, projectSchema, skillSchema, themeSchema,
-  resumeUploadResponse, portfolioPublicResponse
+  resumeUploadResponse, portfolioPublicResponse,
+  createPortfolioSchema
 } from "./types";
 import { successResponseSchema } from "../common"; // your common
 import z from "zod";
@@ -11,22 +12,16 @@ const c = initContract();
 
 export const portfolioContract = c.router({
   // Protected routes (user's own portfolio)
-  uploadResume: {
+  createResume: {
     method: "POST",
     path: "/resume/upload",
     body: z.any(),
-    contentType: "multipart/form-data",
     responses: { 200: resumeUploadResponse },
   },
-  saveManualData: {
+  createPortfolio: {
     method: "POST",
     path: "/manual",
-    body: z.object({
-      name: z.string().optional(),
-      headline: z.string().optional(),
-      bio: z.string().optional(),
-      avatarUrl: z.string().nullable()
-    }),
+    body: createPortfolioSchema,
     responses: { 200: successResponseSchema },
   },
   addProject: {

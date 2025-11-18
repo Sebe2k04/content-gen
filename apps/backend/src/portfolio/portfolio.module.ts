@@ -1,4 +1,3 @@
-// src/portfolio/portfolio.module.ts
 import type { FastifyInstance } from "fastify";
 import { portfolioController } from "./portfolio.controller";
 import { initServer } from "@ts-rest/fastify";

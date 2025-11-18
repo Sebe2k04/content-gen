@@ -1,4 +1,3 @@
-// src/portfolio/portfolio.service.ts
 import { em } from "src/db";
 import { Resume } from "src/entities/resume.entity";
 import { Portfolio } from "src/entities/portfolio.entity";
@@ -35,7 +34,7 @@ export class PortfolioService {
   }
 
   // Upload PDF, save to storage and call parser
-  async uploadResume(
+  async createResume(
     user: { id: string; email: string },
     file: { filename: string; mimetype: string; buffer: Buffer }
   ) {
@@ -76,18 +75,7 @@ export class PortfolioService {
     return { resumeId: resume.id, extracted };
   }
 
-  // Stubbed parser — plug in OpenResume / resume-parser / LLM pipeline here
   private async parsePdfResume(storagePath: string) {
-    // Option A: use open-source parsers (perminder-klair/resume-parser, OpenResume). Faster and cheap.
-    // Option B: use LLM-based extraction: run OCR/text-extract → prompt LLM to return JSON schema (better on varied formats).
-    // See references: resume-parser, OpenResume, Unstract/LLM pipelines. :contentReference[oaicite:3]{index=3}
-    //
-    // This method should:
-    // 1. Extract text from PDF (e.g. pdf-parse, pdfjs, PyMuPDF)
-    // 2. Run an extractor (rules-based) or call an LLM with a JSON schema prompt
-    // 3. Return structured JSON: name, email, phone, summary, skills[], education[], experience[]
-    //
-    // For now, return a minimal stub:
     return {
       name: null,
       email: null,
@@ -99,22 +87,21 @@ export class PortfolioService {
     };
   }
 
-  // Manual profile save
-  async saveManualData(
+  async createPortfolio(
     user: { id: string },
-    data: {
-      name?: string;
-      headline?: string;
-      bio?: string;
-      avatarUrl?: string | null;
-    }
+    data: ServerInferRequest<typeof contract.portfolio.createPortfolio>["body"]
   ) {
     const userEntity = await this.em.findOneOrFail(User, user.id);
-    const portfolio = await this.em.findOneOrFail(Portfolio, { user: { id: user.id } });
-    portfolio.name = data.name ?? portfolio.name;
-    portfolio.headline = data.headline ?? portfolio.headline;
-    portfolio.bio = data.bio ?? portfolio.bio;
-    portfolio.avatarUrl = data.avatarUrl ?? portfolio.avatarUrl;
+    const portfolio = new Portfolio({
+      user: userEntity,
+      name: data.name,
+      headline: data.headline || null,
+      bio: data.bio || null,
+      avatarUrl: data.avatarUrl || null,
+      projects: [],
+      skills: [],
+      integrations: [],
+    });
     await this.em.persistAndFlush(portfolio);
     return { message: "Saved" };
   }
@@ -196,7 +183,9 @@ export class PortfolioService {
 
   async upsertIntegration(
     user: { id: string },
-    data: ServerInferRequest<typeof contract.portfolio.upsertIntegration>["body"] 
+    data: ServerInferRequest<
+      typeof contract.portfolio.upsertIntegration
+    >["body"]
   ) {
     const portfolio = await this.em.findOneOrFail(Portfolio, {
       user: { id: user.id },
@@ -247,33 +236,35 @@ export class PortfolioService {
     if (!portfolio) {
       throw new BadRequestException("No portfolio found");
     }
-    
+
     // Convert collections to plain JavaScript arrays
-    const skills = portfolio.skills.getItems().map(skill => ({
+    const skills = portfolio.skills.getItems().map((skill) => ({
       id: skill.id,
       name: skill.name,
       level: skill.level,
-      tags: skill.tags
+      tags: skill.tags,
     }));
-    
-    const projects = portfolio.projects.getItems().map(project => ({
+
+    const projects = portfolio.projects.getItems().map((project) => ({
       id: project.id,
       title: project.title,
       description: project.description,
       repoUrl: project.repoUrl,
       demoUrl: project.demoUrl,
       technologies: project.technologies,
-      highlight: project.highlight
+      highlight: project.highlight,
     }));
-    
-    const integrations = portfolio.integrations.getItems().map(integration => ({
-      id: integration.id,
-      provider: integration.provider,
-      profileUrl: integration.profileUrl,
-      username: integration.username,
-      meta: integration.meta
-    }));
-    
+
+    const integrations = portfolio.integrations
+      .getItems()
+      .map((integration) => ({
+        id: integration.id,
+        provider: integration.provider,
+        profileUrl: integration.profileUrl,
+        username: integration.username,
+        meta: integration.meta,
+      }));
+
     // map to public response
     return {
       id: portfolio.id,

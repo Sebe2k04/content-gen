@@ -36,15 +36,17 @@ export const themeSchema = z.object({
 
 export const resumeUploadResponse = z.object({
   resumeId: z.string(),
-  extracted: z.object({
-    name: z.string().nullable(),
-    email: z.string().nullable(),
-    phone: z.string().nullable(),
-    summary: z.string().nullable(),
-    skills: z.array(z.string()).optional(),
-    education: z.array(z.any()).optional(),
-    experience: z.array(z.any()).optional()
-  }).optional()
+  extracted: z
+    .object({
+      name: z.string().nullable(),
+      email: z.string().nullable(),
+      phone: z.string().nullable(),
+      summary: z.string().nullable(),
+      skills: z.array(z.string()).optional(),
+      education: z.array(z.any()).optional(),
+      experience: z.array(z.any()).optional(),
+    })
+    .optional(),
 });
 
 export const portfolioPublicResponse = z.object({
@@ -58,5 +60,12 @@ export const portfolioPublicResponse = z.object({
   projects: z.array(projectSchema),
   integrations: z.array(integrationSchema),
   theme: themeSchema.nullable(),
-  resumeUrl: z.string().nullable()
+  resumeUrl: z.string().nullable(),
+});
+
+export const createPortfolioSchema = z.object({
+  name: z.string(),
+  headline: z.string().optional(),
+  bio: z.string().optional(),
+  avatarUrl: z.string().nullable(),
 });
