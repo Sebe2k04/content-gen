@@ -3,7 +3,7 @@ import { BaseEntity } from "./base.entity";
 import { Portfolio } from "./portfolio.entity";
 import { SkillLevel } from "contract/enum";
 
-@Entity()
+@Entity({schema:"portfolio"})
 export class Skill extends BaseEntity {
   @ManyToOne()
   portfolio: Portfolio;

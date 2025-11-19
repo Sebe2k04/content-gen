@@ -1,9 +1,9 @@
-import { Entity, Property, ManyToOne } from "@mikro-orm/core";
+import { Entity, Property, ManyToOne, Enum } from "@mikro-orm/core";
 import { BaseEntity } from "./base.entity";
 import { Portfolio } from "./portfolio.entity";
 import { MediaType } from "contract/enum";
 
-@Entity()
+@Entity({schema:"portfolio"})
 export class Resume extends BaseEntity {
   @ManyToOne()
   portfolio: Portfolio;
@@ -11,7 +11,7 @@ export class Resume extends BaseEntity {
   @Property({})
   filename: string;
 
-  @Property({})
+  @Enum({items:() => MediaType})
   mediaType: MediaType;
 
   @Property({})

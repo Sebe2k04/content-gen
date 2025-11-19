@@ -21,7 +21,7 @@ export const portfolioContract = c.router({
   },
   createPortfolio: {
     method: "POST",
-    path: "/manual",
+    path: "/createPortfolio",
     body: createPortfolioSchema,
     responses: { 200: successResponseSchema },
   },

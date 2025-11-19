@@ -42,30 +42,27 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   const redirectToLogin = () => {
-    Cookies.remove("token");
-    if(router.pathname.includes("/dashboard")) {
-      router.replace("/auth");
-    }
+    // Cookies.remove(userTokenCookieName);
+    // if (router.pathname.includes("/dashboard")) {
+    //   router.replace("/auth");
+    // }
   };
+
 
   // 🔄 Fetch user profile
   const fetchUser = async () => {
     try {
-      const res = await client.user.getProfile.query({
-        query: {},
-      });
+            const res = await client.user.getProfile.query({});
 
       if (res.status === 200) {
         setUser(res.body);
         return;
       }
-
-      // For any non-200 response
-      redirectToLogin();
     } catch (err) {
       redirectToLogin();
     }
   };
+  
 
   const refreshUser = async () => {
     setLoading(true);
@@ -75,14 +72,14 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   // First load
   useEffect(() => {
-    const tokenExists = Cookies.get("token");
+    const tokenExists = Cookies.get(userTokenCookieName);
     if (!tokenExists) {
       redirectToLogin();
       return;
     }
 
     refreshUser();
-  }, []);
+  }, [router]);
 
   return (
     <UserContext.Provider value={{ user, loading, refreshUser }}>

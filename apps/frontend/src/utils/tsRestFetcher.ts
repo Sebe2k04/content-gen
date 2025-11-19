@@ -100,6 +100,7 @@ export const tsRestFetcher = (token?: string, config?: AxiosRequestConfig) => {
         },
         ...config,
       });
+      console.log("resss",result);
 
       if (result.status === 401) {
         Cookies.remove(userTokenCookieName);

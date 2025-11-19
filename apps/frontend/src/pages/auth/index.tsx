@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import { useCustomToast } from "@/hooks/useToast";
 import { ToastStatus } from "@/types/toast";
 import { useApiQuery } from "@/hooks/useApi";
+import { userTokenCookieName } from "@/utils/common";
 
 const schema = z.object({
   email: z.string().email("Invalid email"),
@@ -20,9 +21,6 @@ const schema = z.object({
 });
 
 type FormValues = z.infer<typeof schema>;
-
-const COOKIE_NAME =
-  process.env.NEXT_PUBLIC_ADMIN_USER_TOKEN_COOKIE_NAME || "token";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -57,7 +55,7 @@ export default function LoginPage() {
       onSuccessFn: (res) => {
         const token = res.body?.accessToken;
         if (token) {
-          Cookies.set(COOKIE_NAME, token, { path: "/", expires: 7 });
+          Cookies.set(userTokenCookieName, token, { path: "/", expires: 7 });
         }
         showToast({
           status: ToastStatus.success,

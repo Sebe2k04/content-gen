@@ -5,11 +5,13 @@ import { useUserData } from "@/context/UserProvider";
 
 export default function PortfolioOverviewPage() {
   const queryClient = getQueryClient();
-  const {user} = useUserData();
+  const { user } = useUserData();
 
   const { data, isLoading } = useQuery({
     queryKey: ["portfolio-overview"],
     queryFn: async () => {
+      const res2 = await queryClient.user.getProfile.query({});
+
       const res = await queryClient.portfolio.getPublicPortfolio.query({
         query: { userId: user?.id }, // backend should treat "me" as authenticated user
       });
@@ -23,7 +25,8 @@ export default function PortfolioOverviewPage() {
       <header className="mb-6">
         <h1 className="text-2xl font-semibold">Portfolio Overview</h1>
         <p className="opacity-70 mt-1">
-          View the summary of your portfolio, projects, skills, and integrations.
+          View the summary of your portfolio, projects, skills, and
+          integrations.
         </p>
       </header>
 
@@ -31,7 +34,10 @@ export default function PortfolioOverviewPage() {
         <p>Loading...</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card title="Resume" value={data?.resumeUrl ? "Uploaded" : "Not uploaded"} />
+          <Card
+            title="Resume"
+            value={data?.resumeUrl ? "Uploaded" : "Not uploaded"}
+          />
           <Card title="Projects" value={data?.projects.length || 0} />
           <Card title="Skills" value={data?.skills.length || 0} />
           <Card title="Integrations" value={data?.integrations.length || 0} />

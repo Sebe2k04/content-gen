@@ -13,7 +13,7 @@ import { Theme } from "./theme.entity";
 import { Integration } from "./integration.entity";
 import { Skill } from "./skill.entity";
 
-@Entity()
+@Entity({schema:"portfolio"})
 export class Portfolio extends BaseEntity {
   @ManyToOne()
   user: User;

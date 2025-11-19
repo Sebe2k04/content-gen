@@ -1,7 +1,7 @@
 import { Entity, Property } from "@mikro-orm/core";
 import { BaseEntity } from "./base.entity";
 
-@Entity()
+@Entity({schema:"portfolio"})
 export class Theme extends BaseEntity {
   @Property({})
   key: string;

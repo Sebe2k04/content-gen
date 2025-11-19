@@ -2,7 +2,7 @@ import { Entity, Property, ManyToOne } from "@mikro-orm/core";
 import { BaseEntity } from "./base.entity";
 import { Portfolio } from "./portfolio.entity";
 
-@Entity()
+@Entity({schema:"portfolio"})
 export class Project extends BaseEntity {
   @ManyToOne()
   portfolio: Portfolio;

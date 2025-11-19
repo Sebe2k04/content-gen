@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
+import { userTokenCookieName } from "@/utils/common";
 
 export default function OAuthCallback() {
   const router = useRouter();
@@ -8,7 +9,7 @@ export default function OAuthCallback() {
 
   useEffect(() => {
     if (typeof token === "string") {
-      Cookies.set("token", token, { expires: 7, path: "/" });
+      Cookies.set(userTokenCookieName, token, { expires: 7, path: "/" });
       router.replace("/dashboard");
     }
   }, [token]);
