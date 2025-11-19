@@ -13,6 +13,7 @@ export const userController = (app: FastifyInstance) => {
     getProfile: {
       handler: async ({ request }) => {
         const authService = await getAuthService();
+        console.log("testing enter")
         // TypeScript now knows request is AuthenticatedRequest in this handler
         const output = await authService.getProfile((request as AuthenticatedRequest).user);
         return { status: 200, body: output };

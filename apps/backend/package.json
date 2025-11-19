@@ -9,7 +9,8 @@
     "migration:down": "mikro-orm migration:down",
     "migration:pending": "mikro-orm migration:pending",
     "migration:list": "mikro-orm migration:list",
-    "migration:fresh": "mikro-orm migration:fresh"
+    "migration:fresh": "mikro-orm migration:fresh",
+    "debug": "node --inspect -r tsx/cjs src/index.ts"
   },
   "dependencies": {
     "@fastify/cookie": "^9.1.0",

@@ -22,6 +22,8 @@
     "noFallthroughCasesInSwitch": false,
     "emitDeclarationOnly": true,
     "allowImportingTsExtensions": true,
+    "inlineSourceMap": false,
+    "sourceRoot": ".",
     "paths": {
       "contract": ["../../apps/contract"],
       "contract/*": ["../../apps/contract/*"]

@@ -67,7 +67,7 @@ export class AuthService {
 
   private issueTokens(payload: { id: string; email: string }) {
     const accessToken = jwt.sign(payload, process.env.JWT_SECRET!, {
-      expiresIn: "15m",
+    expiresIn: "3d",
     });
     return { accessToken, user: payload };
   }
