@@ -17,24 +17,24 @@ export const authContract = c.router(
       path: "/signup",
       body: signupSchema,
       responses: {
-        201: successAuthResponseSchema
-      }
+        201: successAuthResponseSchema,
+      },
     },
     login: {
       method: "POST",
       path: "/login",
       body: loginSchema,
       responses: {
-        200: successAuthResponseSchema
-      }
+        200: successAuthResponseSchema,
+      },
     },
     generateEmailOtp: {
       method: "POST",
       path: "/email-otp/generate",
       body: generateOtpSchema,
       responses: {
-        200: z.object({ message: z.string() })
-      }
+        200: z.object({ message: z.string() }),
+      },
     },
     verifyEmailOtp: {
       method: "POST",
@@ -43,6 +43,29 @@ export const authContract = c.router(
       responses: {
         200: successAuthResponseSchema,
       },
+    },
+    // googleLogin: {
+    //   method: "GET",
+    //   path: "/google",
+    //   responses: { 302: z.void() },
+    // },
+
+    googleCallback: {
+      method: "GET",
+      path: "/google/callback",
+      responses: { 302: z.void() },
+    },
+
+    // githubLogin: {
+    //   method: "GET",
+    //   path: "/github",
+    //   responses: { 302: z.void() },
+    // },
+
+    githubCallback: {
+      method: "GET",
+      path: "/github/callback",
+      responses: { 302: z.void() },
     },
   },
   {
