@@ -121,10 +121,7 @@ const config: Options = {
     },
   },
   // Configure logging
-  debug:
-    env.NODE_ENV === "development"
-      ? ["query", "query-params", "schema"]
-      : false,
+  debug: true,
   logger: (message: string) => {
     const logger = new PinoMikroLogger();
     logger.log("app", message);

@@ -1,23 +1,20 @@
 // src/contract/portfolio/types.ts
 import { z } from "zod";
-import { IntegrationProvider, MediaType, SkillLevel } from "../enum";
-
-export const integrationSchema = z.object({
-  id: z.string().optional(), // server id
-  provider: z.nativeEnum(IntegrationProvider),
-  profileUrl: z.string().url(),
-  username: z.string().nullable(),
-  meta: z.record(z.any()).optional(),
-});
+import {
+  IntegrationProvider,
+  MediaType,
+  PortfolioTab,
+  SkillLevel,
+} from "../enum";
 
 export const projectSchema = z.object({
   id: z.string().optional(),
   title: z.string(),
   description: z.string().nullable(),
   repoUrl: z.string().url().nullable(),
-  demoUrl: z.string().url().nullable(),
-  technologies: z.array(z.string()).optional(),
-  highlight: z.string().optional(),
+  websiteUrl: z.string().url().nullable(),
+  technologies: z.array(z.string()).nullable(),
+  highlight: z.string().nullable(),
 });
 
 export const skillSchema = z.object({
@@ -27,11 +24,58 @@ export const skillSchema = z.object({
   tags: z.array(z.string()).optional(),
 });
 
+export const integrationSchema = z.object({
+  id: z.string().optional(), // server id
+  provider: z.nativeEnum(IntegrationProvider),
+  profileUrl: z.string().url(),
+  username: z.string().nullable(),
+  meta: z.record(z.any()).optional(),
+});
+
 export const themeSchema = z.object({
   id: z.string().optional(),
   key: z.string(), // e.g. "minimal", "dark", "two-column"
   displayName: z.string(),
   settings: z.record(z.any()).optional(), // JSON theme options
+});
+
+export const educationSchema = z.object({
+  institution: z.string(),
+  degree: z.string().nullable(),
+  fieldOfStudy: z.string().nullable(),
+  startDate: z.string().nullable(),
+  endDate: z.string().nullable(),
+  description: z.string().nullable(),
+});
+
+export const editPortfolioSchema = z.object({
+  // tabs
+  tab: z.nativeEnum(PortfolioTab),
+  // personal info
+  name: z.string(),
+  headline: z.string().nullable(),
+  bio: z.string().nullable(),
+  avatarUrl: z.string().nullable(),
+  about: z.string().nullable(),
+  roles: z.array(z.string()).nullable(),
+
+  // projects
+  projects: z.array(projectSchema),
+  // skills
+  skills: z.array(skillSchema),
+  // integrations
+  integrations: z.array(integrationSchema),
+  // theme
+  theme: themeSchema.optional(),
+});
+
+export const getAllPortfolioResponse = z.object({
+  portfolios: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+    })
+  ),
 });
 
 export const resumeUploadResponse = z.object({
@@ -74,4 +118,4 @@ export const createResumeSchema = z.object({
   url: z.string().url(),
   filename: z.string(),
   mediaType: z.nativeEnum(MediaType),
-})
+});

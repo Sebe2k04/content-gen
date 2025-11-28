@@ -23,7 +23,7 @@ export function JwtGuard(app: FastifyInstance) {
         await new Promise<void>((resolve, reject) => {
           app.authenticate(request, reply, (err) => {
             if (err) return reject(err);
-            resolve();
+            return resolve();
           });
         });
 

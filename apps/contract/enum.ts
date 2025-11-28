@@ -31,3 +31,12 @@ export enum MediaType {
   DOCUMENT = "document",
 }
   
+export enum PortfolioTab {
+  PersonalInfo = "Personal Information",
+  Projects = "Projects",
+  Skills = "Skills",
+  Experience = "Experience",
+  Education = "Education",
+  Integrations = "Integrations",
+  Theme = "Theme",
+}

@@ -17,6 +17,7 @@ export default fp(async function jwtPlugin(app: FastifyInstance) {
 
         const decoded = app.jwt.verify(token);
         request.user = decoded; // attaches user to request
+        return;
       } catch (err) {
         return reply.status(401).send({ message: "Invalid token" });
       }

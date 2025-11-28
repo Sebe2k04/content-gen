@@ -23,7 +23,7 @@ export class Project extends BaseEntity {
   @Property({
     nullable: true,
   })
-  demoUrl: string | null;
+  websiteUrl: string | null;
 
   @Property({
     type: "array",
@@ -40,7 +40,7 @@ export class Project extends BaseEntity {
     title,
     description,
     repoUrl,
-    demoUrl,
+    websiteUrl,
     technologies,
     highlight,
   }: {
@@ -48,7 +48,7 @@ export class Project extends BaseEntity {
     title: string;
     description?: string | null;
     repoUrl?: string | null;
-    demoUrl?: string | null;
+    websiteUrl?: string | null;
     technologies?: string[];
     highlight?: string | null;
   }) {
@@ -57,7 +57,7 @@ export class Project extends BaseEntity {
     this.title = title;
     this.description = description || null;
     this.repoUrl = repoUrl || null;
-    this.demoUrl = demoUrl || null;
+    this.websiteUrl = websiteUrl || null;
     this.technologies = technologies || [];
     this.highlight = highlight || null;
   }

@@ -352,8 +352,27 @@
           "nullable": true,
           "mappedType": "text"
         },
-        "resume_id": {
-          "name": "resume_id",
+        "about": {
+          "name": "about",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "roles": {
+          "name": "roles",
+          "type": "text[]",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "'{}'",
+          "mappedType": "array"
+        },
+        "resume_url": {
+          "name": "resume_url",
           "type": "text",
           "unsigned": false,
           "autoincrement": false,
@@ -397,19 +416,6 @@
             "id"
           ],
           "referencedTableName": "public.user",
-          "updateRule": "cascade"
-        },
-        "portfolio_resume_id_foreign": {
-          "constraintName": "portfolio_resume_id_foreign",
-          "columnNames": [
-            "resume_id"
-          ],
-          "localTableName": "portfolio.portfolio",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "portfolio.resume",
-          "deleteRule": "set null",
           "updateRule": "cascade"
         },
         "portfolio_theme_id_foreign": {
@@ -573,120 +579,6 @@
           "nullable": false,
           "mappedType": "text"
         },
-        "filename": {
-          "name": "filename",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "media_type": {
-          "name": "media_type",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "enumItems": [
-            "image",
-            "video",
-            "pdf",
-            "document"
-          ],
-          "mappedType": "enum"
-        },
-        "url": {
-          "name": "url",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "extracted_data": {
-          "name": "extracted_data",
-          "type": "jsonb",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "json"
-        }
-      },
-      "name": "resume",
-      "schema": "portfolio",
-      "indexes": [
-        {
-          "keyName": "resume_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "constraint": true,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "resume_portfolio_id_foreign": {
-          "constraintName": "resume_portfolio_id_foreign",
-          "columnNames": [
-            "portfolio_id"
-          ],
-          "localTableName": "portfolio.resume",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "portfolio.portfolio",
-          "updateRule": "cascade"
-        }
-      },
-      "nativeEnums": {}
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamptz",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamptz",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "portfolio_id": {
-          "name": "portfolio_id",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
         "title": {
           "name": "title",
           "type": "text",
@@ -714,8 +606,8 @@
           "nullable": true,
           "mappedType": "text"
         },
-        "demo_url": {
-          "name": "demo_url",
+        "website_url": {
+          "name": "website_url",
           "type": "text",
           "unsigned": false,
           "autoincrement": false,
